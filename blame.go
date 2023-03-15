@@ -185,7 +185,7 @@ func (b *blame) fillGraphAndData() error {
 		if err != nil {
 			return err
 		}
-		nLines := countLines(b.data[i])
+		nLines := strings.Count(b.data[i], "\n")
 		// create a node for each line
 		b.graph[i] = make([]*object.Commit, nLines)
 		// assign a commit to each node
@@ -225,7 +225,22 @@ func (b *blame) assignOrigin(c, p int) {
 	sl := -1 // source line
 	dl := -1 // destination line
 	for h := range hunks {
-		hLines := countLines(hunks[h].Text)
+		hLines := strings.Count(hunks[h].Text, "\n")
+		if hLines == 0 {
+			switch hunks[h].Type {
+			case 1:
+				if dl > -1 {
+					dl--
+				}
+				hLines++
+			case -1:
+				if sl > -1 {
+					sl--
+				}
+				hLines++
+			}
+		}
+
 		for hl := 0; hl < hLines; hl++ {
 			switch {
 			case hunks[h].Type == 0:
