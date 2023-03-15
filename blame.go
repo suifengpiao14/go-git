@@ -231,13 +231,13 @@ func (b *blame) assignOrigin(c, p int) {
 			case 1:
 				if dl > -1 {
 					dl--
+					hLines++
 				}
-				hLines++
 			case -1:
 				if sl > -1 {
 					sl--
+					hLines++
 				}
-				hLines++
 			}
 		}
 
